@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
 import { WsStartGateway } from './ws.gateway';
 import { AppService } from './app.service';
 

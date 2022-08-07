@@ -11,13 +11,13 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
+
     if (!user)
-      if (!user) {
-        throw new HttpException(
-          'Wrong username or password!🙅‍♂️',
-          HttpStatus.FORBIDDEN,
-        );
-      }
+      throw new HttpException(
+        'Wrong username or password!🙅‍♂️',
+        HttpStatus.FORBIDDEN,
+      );
+
     const isUser = await user.comparePassword(pass);
     return isUser ? user : null;
   }
