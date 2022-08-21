@@ -16,10 +16,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: [`.env.${process.env.NODE_ENV}`],
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_SECRET_URL),
     AuthModule,
     UsersModule,

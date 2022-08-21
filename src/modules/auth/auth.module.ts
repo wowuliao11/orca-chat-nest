@@ -10,9 +10,7 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: [`.env.${process.env.NODE_ENV}`],
-    }),
+    ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
     JwtModule.register({
