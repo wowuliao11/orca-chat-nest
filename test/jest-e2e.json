@@ -1,9 +1,21 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@app/cos/(.*)": "<rootDir>/../libs/cos/src/$1",
+    "@app/cos": "<rootDir>/../libs/cos/src",
+    "@app/cos2/(.*)": "<rootDir>/../libs/cos2/src/$1",
+    "@app/cos2": "<rootDir>/../libs/cos2/src",
+    "@app/file-lib/(.*)": "<rootDir>/../libs/file-lib/src/$1",
+    "@app/file-lib": "<rootDir>/../libs/file-lib/src"
   }
 }

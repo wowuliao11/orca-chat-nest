@@ -27,21 +27,23 @@ export class LoggerInterceptor implements NestInterceptor {
       maxArrayLength: 10,
       maxStringLength: 1000,
     };
-
+    const requestFormat = `Request original url: ${req.originalUrl}\nMethod: ${
+      req.method
+    }\nIP: ${req.ip}\nUser: ${JSON.stringify(
+      req.user,
+    )}\nRequest params: ${inspect(
+      params,
+      inspectOptions,
+    )}\nRequest data: ${inspect(query || body, inspectOptions)}}`;
+    this.logger.log(requestFormat);
     return next.handle().pipe(
       map((data) => {
-        const logFormat = `Request original url: ${req.originalUrl}\nMethod: ${
-          req.method
-        }\nIP: ${req.ip}\nUser: ${JSON.stringify(
+        const responseFormat = `Request original url: ${
+          req.originalUrl
+        }\nMethod: ${req.method}\nIP: ${req.ip}\nUser: ${JSON.stringify(
           req.user,
-        )}\nRequest params: ${inspect(
-          params,
-          inspectOptions,
-        )}\nRequest data: ${inspect(
-          query || body,
-          inspectOptions,
         )}\nResponse data: ${inspect(data, inspectOptions)}`;
-        this.logger.log(logFormat);
+        this.logger.log(responseFormat);
 
         return data;
       }),

@@ -1,4 +1,4 @@
-import { WsStartGateway } from './ws.gateway';
+import { AppGateway } from './ws.gateway';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +13,9 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { mongoValidationFilter } from './filters/mongoServerError.filter';
 import { validationFilter } from './filters/validation.filter';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
+import { CosModule } from './modules/cos/cos.module';
+import { CosController } from './modules/cos/cos.controller';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
 
 @Module({
   imports: [
@@ -20,11 +23,12 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     MongooseModule.forRoot(process.env.MONGO_SECRET_URL),
     AuthModule,
     UsersModule,
+    CosModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, UsersController, CosController],
   providers: [
     AppService,
-    WsStartGateway,
+    AppGateway,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
@@ -33,6 +37,10 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
     },
     {
       provide: APP_FILTER,

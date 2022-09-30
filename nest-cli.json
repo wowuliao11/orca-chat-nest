@@ -1,5 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "projects": {
+    "file-lib": {
+      "type": "library",
+      "root": "libs/file-lib",
+      "entryFile": "index",
+      "sourceRoot": "libs/file-lib/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/file-lib/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
 }

@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { inspect } from 'util';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -22,9 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const logFormat = `Request original url: ${request.originalUrl} Method: ${
       request.method
-    } IP: ${
-      request.ip
-    } Status code: ${status} Response: ${exception.toString()}`;
+    } IP: ${request.ip} Status code: ${status} \Details: ${inspect(exception)}`;
     this.logger.error(logFormat);
     let message = exception.message
       ? exception.message
@@ -35,8 +34,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (expResponse.message instanceof Array && expResponse.message.length >= 0)
       message = expResponse.message[0];
     const errorResponse = {
-      statusCode: status,
-      data: {
+      status,
+      payload: {
         error: message,
       },
       message: 'The request failed',
