@@ -19,7 +19,6 @@ export class AuthService {
     try {
       const user = await this.usersService.findOne(username).session(session);
 
-      await session.commitTransaction();
       if (!user)
         throw new HttpException(
           'Wrong username or password!🙅‍♂️',
@@ -27,6 +26,7 @@ export class AuthService {
         );
 
       const isUser = await user.comparePassword(pass);
+      await session.commitTransaction();
       return isUser ? user : null;
     } catch (err) {
       await session.abortTransaction();

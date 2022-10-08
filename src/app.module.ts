@@ -16,6 +16,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { CosModule } from './modules/cos/cos.module';
 import { CosController } from './modules/cos/cos.controller';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -24,8 +25,10 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
     AuthModule,
     UsersModule,
     CosModule,
+    MailModule,
   ],
   controllers: [AppController, UsersController, CosController],
+
   providers: [
     AppService,
     AppGateway,
