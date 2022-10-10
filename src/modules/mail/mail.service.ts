@@ -1,32 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  private testAccount;
+  private logger: Logger = new Logger('AppGateway');
   private transporter;
   constructor() {
     (async () => {
-      this.testAccount = await nodemailer.createTestAccount();
       this.transporter = nodemailer.createTransport({
-        service: 'Outlook365',
+        service: 'outlook',
         auth: {
-          user: 'wowuliao@outlook.com', // generated ethereal user
-          pass: 'kuaileme11', // generated ethereal password
+          user: process.env.EMAIL_USERNAME, // generated ethereal user
+          pass: process.env.EMAIL_PASSWORD, // generated ethereal password
         },
       });
     })();
   }
 
-  async sendEmail() {
-    const info = await this.transporter.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>', // sender address
-      to: '286370787@qq.com', // list of receivers
+  async sendEmail({
+    from = 'ORCA 🐳',
+    to,
+    subject,
+    html = '<h1>🐳</h1><b>Hello friend👽!</b>',
+  }: {
+    from?: string;
+    to: string;
+    subject: string;
+    html?: string;
+  }) {
+    this.transporter
+      .sendMail({
+        from: `"${from}" <>${process.env.EMAIL_USERNAME}`, // sender address
+        to, // list of receivers
 
-      subject: 'Hello ✔', // Subject line
-      text: 'Hello world?', // plain text body
-      html: '<b>Hello world?</b>', // html body
-    });
-    return info;
+        subject, // Subject line
+        text: JSON.stringify(html), // plain text body
+        html, // html body
+      })
+      .catch((err) => this.logger.error(err));
+    return 'sending...';
   }
 }
