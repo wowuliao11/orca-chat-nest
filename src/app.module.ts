@@ -1,5 +1,5 @@
 import { AppGateway } from './ws.gateway';
-import { Module, ValidationPipe } from '@nestjs/common';
+import { CacheModule, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -16,11 +16,19 @@ import { CosModule } from './modules/cos/cos.module';
 import { CosController } from './modules/cos/cos.controller';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { MailModule } from './modules/mail/mail.module';
+import * as redisStore from 'cache-manager-redis-store';
+import type { ClientOpts } from 'redis';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_SECRET_URL),
+    CacheModule.register<ClientOpts>({
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
     AuthModule,
     UsersModule,
     CosModule,

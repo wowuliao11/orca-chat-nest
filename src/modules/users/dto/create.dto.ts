@@ -8,4 +8,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MaxLength(32)
   password: string;
+
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  verificationCode: string;
 }

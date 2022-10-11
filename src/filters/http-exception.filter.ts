@@ -36,7 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const errorResponse = {
       status,
       payload: {
-        error: message,
+        errMsg: message,
       },
       message: 'The request failed',
       code: 1, // 自定义code

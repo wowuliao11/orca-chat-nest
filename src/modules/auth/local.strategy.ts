@@ -6,11 +6,11 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({ usernameField: 'loginKey' });
   }
 
-  async validate(username: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(username, password);
+  async validate(loginKey: string, password: string): Promise<any> {
+    const user = await this.authService.validateUser(loginKey, password);
     if (!user) {
       throw new HttpException(
         'Wrong username or password!🙅‍♂️',

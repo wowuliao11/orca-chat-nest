@@ -12,12 +12,14 @@ export class AuthService {
     @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
+  async validateUser(loginKey: string, pass: string): Promise<any> {
     const session = await this.connection.startSession();
     session.startTransaction();
 
     try {
-      const user = await this.usersService.findOne(username).session(session);
+      const user = await this.usersService
+        .findOneByKey(loginKey)
+        .session(session);
 
       if (!user)
         throw new HttpException(

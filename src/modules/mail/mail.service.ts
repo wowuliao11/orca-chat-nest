@@ -1,11 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class MailService {
   private logger: Logger = new Logger('AppGateway');
   private transporter;
-  constructor() {
+  constructor(@Inject(CACHE_MANAGER) private cacher: Cache) {
     (async () => {
       this.transporter = nodemailer.createTransport({
         service: 'outlook',
@@ -39,5 +40,27 @@ export class MailService {
       })
       .catch((err) => this.logger.error(err));
     return 'sending...';
+  }
+
+  async sendVerificationCode(to: string) {
+    const randomCode = (Math.random() + 1)
+      .toString(36)
+      .substring(7)
+      .toLocaleUpperCase();
+
+    this.transporter // 异步发送
+      .sendMail({
+        from: `"ORCA-CHAT 🐳" <>${process.env.EMAIL_USERNAME}`, // sender address
+        to, // list of receivers
+
+        subject: 'Sign Up Verification Code', // Subject line
+        text: 'Your  Code is: ' + randomCode, // plain text body
+        html: '<h4>' + 'Your Code is: ' + randomCode + '</h4>', // html body
+      })
+      .catch((err) => this.logger.error(err));
+
+    return this.cacher.set('SIGN_UP_VERIFICTION_CODE:' + to, randomCode, {
+      ttl: 600,
+    });
   }
 }
