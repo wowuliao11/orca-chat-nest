@@ -1,5 +1,5 @@
 import { User, UserDocument } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import {
   CACHE_MANAGER,
   HttpException,
@@ -37,12 +37,25 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
 
+    const alreadyUser = await this.userModel.findOne({
+      $or: [{ username: data.username }, { email: data.email }],
+    });
+    if (alreadyUser)
+      throw new HttpException(
+        'Username or email is already exist!',
+        HttpStatus.CONFLICT,
+      );
+
     return this.userModel.create(data);
   }
 
   findOneByKey(loginKey: string) {
     return this.userModel.findOne({
-      $or: [{ username: loginKey }, { email: loginKey }],
+      $or: [
+        { username: loginKey },
+        { email: loginKey },
+        { _id: isValidObjectId(loginKey) ? loginKey : null },
+      ],
     });
   }
 }

@@ -9,7 +9,7 @@ export class mongoValidationFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status = 400;
+    const status = 500;
 
     const logFormat = `Request original url: ${request.originalUrl} Method: ${
       request.method
@@ -21,8 +21,8 @@ export class mongoValidationFilter implements ExceptionFilter {
 
     const errorResponse = {
       statusCode: status,
-      data: {
-        error: message,
+      payload: {
+        errMsg: message,
       },
       message: 'The request failed',
       code: 1, // 自定义code

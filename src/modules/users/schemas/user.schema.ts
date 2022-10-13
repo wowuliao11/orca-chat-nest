@@ -6,6 +6,10 @@ const SALT_WORK_FACTOR = 10;
 
 export type UserDocument = User & Document;
 
+enum Role { // 角色枚举
+  USER = 'USER',
+}
+
 @Schema()
 export class User {
   @Prop({ required: true, index: { unique: true } })
@@ -16,6 +20,12 @@ export class User {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ required: true, type: Array<Role>, default: [Role.USER] })
+  roles: Array<string>;
+
+  @Prop({})
+  avatar: string; // 头像
 
   async comparePassword(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
