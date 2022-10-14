@@ -12,10 +12,10 @@ enum Role { // 角色枚举
 
 @Schema()
 export class User {
-  @Prop({ required: true, index: { unique: true } })
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true, index: { unique: true } })
+  @Prop({ required: true, unique: true })
   username: string;
 
   @Prop({ required: true })

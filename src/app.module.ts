@@ -25,8 +25,8 @@ import type { ClientOpts } from 'redis';
     MongooseModule.forRoot(process.env.MONGO_SECRET_URL),
     CacheModule.register<ClientOpts>({
       store: redisStore,
-      host: 'localhost',
-      port: 6379,
+      host: process.env.REDIS_HOST,
+      password: process.env.REDIS_PASSWORD,
       isGlobal: true,
     }),
     AuthModule,
