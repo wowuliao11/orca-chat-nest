@@ -23,6 +23,7 @@ export class CosService {
     await this.minioClient
       .putObject(process.env.MINIO_BUCKET_1, fileName, file.buffer, metadata)
       .catch((err) => {
+        console.log(err);
         throw new HttpException(err, 500);
       });
     return `http://${process.env.MINIO_ENDPOINT}:9000/${process.env.MINIO_BUCKET_1}/${fileName}`;

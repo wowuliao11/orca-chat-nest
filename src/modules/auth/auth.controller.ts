@@ -18,6 +18,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('validate')
   async validate(@Request() req) {
+    delete req.user?.password;
     return req.user;
   }
 }
