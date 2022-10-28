@@ -1,5 +1,5 @@
 import { User, UserDocument } from './schemas/user.schema';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId } from 'mongoose';
 import {
   CACHE_MANAGER,
   HttpException,
@@ -10,6 +10,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Cache } from 'cache-manager';
 import { CreateUserDto } from './dto/create.dto';
+import { UpdateUserDto } from './dto/update.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,18 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @Inject(CACHE_MANAGER) private cacher: Cache,
   ) {}
+
+  async updateOne({
+    id,
+    user,
+  }: {
+    id: string | ObjectId;
+    user: UpdateUserDto;
+  }) {
+    return this.userModel.findOneAndUpdate({ _id: id }, user, {
+      returnOriginal: false,
+    });
+  }
 
   async registe(data: CreateUserDto) {
     const verificationCode = await this.cacher.get(

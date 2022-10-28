@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import * as jimp from 'jimp';
 import * as Minio from 'minio';
 import * as mimeType from 'mime-types';
 
@@ -15,6 +16,7 @@ export class CosService {
     });
   }
   async upload(file: Express.Multer.File) {
+    console.log(jimp);
     const metadata = {
       'Content-Type': file.mimetype,
     };
@@ -26,6 +28,22 @@ export class CosService {
         console.log(err);
         throw new HttpException(err, 500);
       });
-    return `http://${process.env.MINIO_ENDPOINT}:9000/${process.env.MINIO_BUCKET_1}/${fileName}`;
+
+    if (file.mimetype.includes('image'))
+      // 当是图片的情况下进行一个缩略图的保存
+      await this.minioClient
+        .putObject(
+          process.env.MINIO_BUCKET_1,
+          process.env.MINIO_BUCKET_THUMB_FOLDER_1 + '/' + fileName,
+          await (await jimp.read(file.buffer))
+            .resize(200, jimp.AUTO)
+            .getBufferAsync(file.mimetype),
+          metadata,
+        )
+        .catch((err) => {
+          console.log(err);
+          throw new HttpException(err, 500);
+        });
+    return `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET_1}/${fileName}`;
   }
 }

@@ -14,4 +14,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   verificationCode: string;
+
+  @IsNotEmpty()
+  nick: string;
 }

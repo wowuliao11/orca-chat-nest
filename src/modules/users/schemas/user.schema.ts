@@ -27,6 +27,9 @@ export class User {
   @Prop({})
   avatar: string; // 头像
 
+  @Prop({ unique: true })
+  nick: string;
+
   async comparePassword(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
   }

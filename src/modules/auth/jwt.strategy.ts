@@ -23,8 +23,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       id: user?._id || '',
       roles: user?.roles || [],
+      nick: user.nick || 'unknowname',
       username: user?.username || '',
       email: user?.email || '',
+      avatar: user?.avatar || '',
     };
   }
 }
