@@ -39,11 +39,10 @@ import type { ClientOpts } from 'redis';
   providers: [
     AppService,
     AppGateway,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,

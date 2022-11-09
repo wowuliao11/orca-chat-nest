@@ -17,13 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
     "paths": {
-      "@app/file-lib": [
-        "libs/file-lib/src"
-      ],
-      "@app/file-lib/*": [
-        "libs/file-lib/src/*"
-      ]
+      "@app/file-lib": ["libs/file-lib/src"],
+      "@app/file-lib/*": ["libs/file-lib/src/*"]
     }
   }
 }

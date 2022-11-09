@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import * as jimp from 'jimp';
+import { AUTO } from 'jimp';
 import * as Minio from 'minio';
 import * as mimeType from 'mime-types';
 
@@ -16,7 +17,6 @@ export class CosService {
     });
   }
   async upload(file: Express.Multer.File) {
-    console.log(jimp);
     const metadata = {
       'Content-Type': file.mimetype,
     };
@@ -36,7 +36,7 @@ export class CosService {
           process.env.MINIO_BUCKET_1,
           process.env.MINIO_BUCKET_THUMB_FOLDER_1 + '/' + fileName,
           await (await jimp.read(file.buffer))
-            .resize(200, jimp.AUTO)
+            .resize(200, AUTO)
             .getBufferAsync(file.mimetype),
           metadata,
         )
