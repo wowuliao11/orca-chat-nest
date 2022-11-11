@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { UsersController } from './modules/users/users.controller';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { mongoValidationFilter } from './filters/mongoServerError.filter';
@@ -18,6 +17,10 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { MailModule } from './modules/mail/mail.module';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
+import { RoomModule } from './modules/room/room.module';
+import { HistoryModule } from './modules/history/history.module';
+import { RolesGuard } from './modules/auth/role.guard';
+import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -33,16 +36,22 @@ import type { ClientOpts } from 'redis';
     UsersModule,
     CosModule,
     MailModule,
+    RoomModule,
+    HistoryModule,
   ],
   controllers: [AppController, UsersController, CosController],
 
   providers: [
     AppService,
     AppGateway,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
@@ -57,7 +66,7 @@ import type { ClientOpts } from 'redis';
     },
     {
       provide: APP_PIPE,
-      useClass: ValidationPipe,
+      useValue: new ValidationPipe({ transform: true }),
     },
     {
       provide: APP_FILTER,

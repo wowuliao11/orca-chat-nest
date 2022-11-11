@@ -6,7 +6,9 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import Role from 'src/config/roles';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create.dto';
 import { EditProfileDto } from './dto/edit-profile.dto';

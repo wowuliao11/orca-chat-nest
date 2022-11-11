@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
+import Role from 'src/config/roles';
 
 const SALT_WORK_FACTOR = 10;
 
 export type UserDocument = User & Document;
-
-enum Role { // 角色枚举
-  USER = 'USER',
-}
-
 @Schema()
 export class User {
   @Prop({ required: true, unique: true })

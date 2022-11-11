@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import * as jimp from 'jimp';
+import Jimp, * as jimp from 'jimp';
 import { AUTO } from 'jimp';
 import * as Minio from 'minio';
 import * as mimeType from 'mime-types';
@@ -28,7 +28,7 @@ export class CosService {
         console.log(err);
         throw new HttpException(err, 500);
       });
-
+    console.log(file.mimetype);
     if (file.mimetype.includes('image'))
       // 当是图片的情况下进行一个缩略图的保存
       await this.minioClient
