@@ -33,7 +33,7 @@ export class AppGateway
     return data;
   }
 
-  afterInit(server: Server) {
+  afterInit() {
     this.logger.log('Init');
   }
 

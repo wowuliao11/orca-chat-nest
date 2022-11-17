@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongoose';
 import Role from 'src/config/roles';
 
 const SALT_WORK_FACTOR = 10;
@@ -8,6 +9,7 @@ const SALT_WORK_FACTOR = 10;
 export type UserDocument = User & Document;
 @Schema()
 export class User {
+  _id: ObjectId;
   @Prop({ required: true, unique: true })
   email: string;
 
