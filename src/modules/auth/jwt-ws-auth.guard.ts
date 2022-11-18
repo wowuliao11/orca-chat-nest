@@ -7,13 +7,12 @@ export class WsJwtGuard implements CanActivate {
   constructor(private usersService: UsersService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    const token = client.handshake.headers.authorization;
+    const token = client.handshake.auth.Authorization;
 
     const jwtUser: any = jwt.verify(
-      token.replace(/(Bearer|bearer)\s/, ''),
+      token?.replace(/(Bearer|bearer)\s/, ''),
       process.env.JWT_SECRET,
     );
-    console.log(jwtUser);
 
     const userDoc = await this.usersService.findOneByKey(jwtUser.id);
 
