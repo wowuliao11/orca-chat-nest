@@ -7,7 +7,7 @@ import Role from 'src/config/roles';
 const SALT_WORK_FACTOR = 10;
 
 export type UserDocument = User & Document;
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   _id: ObjectId;
   @Prop({ required: true, unique: true })
