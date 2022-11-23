@@ -6,14 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { UpdateHistoryDto } from './dto/update-history.dto';
+import { UsersService } from '../users/users.service';
+import { ObjectId } from 'mongoose';
+import { RoomIdDto } from './dto/roomId';
 
 @Controller('history')
 export class HistoryController {
-  constructor(private readonly historyService: HistoryService) {}
+  constructor(
+    private readonly historyService: HistoryService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post()
   create(@Body() createHistoryDto: CreateHistoryDto) {
@@ -23,6 +31,11 @@ export class HistoryController {
   @Get()
   findAll() {
     return this.historyService.findAll();
+  }
+
+  @Get('room')
+  getRoomHistories(@Query() query: RoomIdDto) {
+    return this.historyService.findHistoryByRoomId(query.roomId);
   }
 
   @Get(':id')

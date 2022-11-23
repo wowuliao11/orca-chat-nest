@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { Room } from 'src/modules/room/schemas/room.schema';
 import { User } from 'src/modules/users/schemas/user.schema';
 
+export type HistoryDocument = History & Document;
 @Schema({ timestamps: true })
 export class History {
   @Prop({ required: true, type: Types.ObjectId, ref: User.name })
@@ -16,4 +16,4 @@ export class History {
   content: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(History);
+export const HistorySchema = SchemaFactory.createForClass(History);

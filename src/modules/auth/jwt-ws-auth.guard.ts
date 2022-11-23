@@ -6,7 +6,8 @@ import { UsersService } from '../users/users.service';
 export class WsJwtGuard implements CanActivate {
   constructor(private usersService: UsersService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const client = context.switchToWs().getClient();
+    const ctx = context.switchToWs();
+    const client = ctx.getClient();
     const token = client.handshake.auth.Authorization;
 
     const jwtUser: any = jwt.verify(
@@ -18,9 +19,9 @@ export class WsJwtGuard implements CanActivate {
 
     if (!userDoc) return false; // User not exist
 
-    if (typeof context.switchToWs().getData() !== 'object') return false;
+    if (typeof ctx.getData() !== 'object') return false;
 
-    context.switchToWs().getData().user = userDoc; // add property
+    ctx.getData().user = userDoc.toObject(); // add property
 
     return true;
   }

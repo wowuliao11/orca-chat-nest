@@ -1,5 +1,10 @@
-import { AppGateway } from './ws.gateway';
-import { CacheModule, Module, ValidationPipe } from '@nestjs/common';
+import { AppGateway } from './modules/ws/ws.gateway';
+import {
+  CacheModule,
+  CacheStore,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,22 +20,32 @@ import { CosModule } from './modules/cos/cos.module';
 import { CosController } from './modules/cos/cos.controller';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { MailModule } from './modules/mail/mail.module';
-import * as redisStore from 'cache-manager-redis-store';
-import type { ClientOpts } from 'redis';
+
 import { RoomModule } from './modules/room/room.module';
 import { HistoryModule } from './modules/history/history.module';
 import { RolesGuard } from './modules/auth/role.guard';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_SECRET_URL),
-    CacheModule.register<ClientOpts>({
-      store: redisStore,
-      host: process.env.REDIS_HOST,
-      password: process.env.REDIS_PASSWORD,
+    CacheModule.registerAsync({
       isGlobal: true,
+      useFactory: async () => {
+        const store = await redisStore({
+          socket: {
+            host: process.env.REDIS_HOST,
+            passphrase: process.env.REDIS_PASSWORD,
+          },
+          store: 'none',
+          password: process.env.REDIS_PASSWORD,
+        });
+        return {
+          store: store as unknown as CacheStore,
+        };
+      },
     }),
     AuthModule,
     UsersModule,

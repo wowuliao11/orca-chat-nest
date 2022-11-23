@@ -8,6 +8,7 @@ import { MailService } from './mail.service';
 export class MailController {
   constructor(private mailService: MailService) {}
 
+  @Public()
   @Post()
   async sendMail(@Body() body: SendMailDto) {
     const { to, subject, html } = body;
