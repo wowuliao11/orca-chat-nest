@@ -35,7 +35,10 @@ export class HistoryController {
 
   @Get('room')
   getRoomHistories(@Query() query: RoomIdDto) {
-    return this.historyService.findHistoryByRoomId(query.roomId);
+    return this.historyService.findHistoryByRoomId(query.roomId, {
+      limit: 10,
+      pageIndex: query.pageIndex,
+    });
   }
 
   @Get(':id')

@@ -34,12 +34,18 @@ export class HistoryService {
   /**
    * Get histories by room id
    */
-  findHistoryByRoomId(roomId: ObjectId, { limit } = { limit: 10 }) {
+  findHistoryByRoomId(
+    roomId: ObjectId,
+    { limit, pageIndex }: { limit?: number; pageIndex?: number } = {
+      limit: 10,
+      pageIndex: 1,
+    },
+  ) {
     return this.historyModel
       .find({ room: roomId })
       .sort('-createdAt')
       .limit(limit)
-      .populate('from')
-      .then((data) => data.reverse());
+      .skip((pageIndex - 1) * limit)
+      .populate('from');
   }
 }
