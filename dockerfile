@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:16-alpine AS development
+FROM --platform=linux/amd64 node:16.18.1-alpine AS development
 
 WORKDIR /usr/src/app
 
