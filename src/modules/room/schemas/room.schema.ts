@@ -5,7 +5,7 @@ import { User } from 'src/modules/users/schemas/user.schema';
 
 @Schema()
 export class Member {
-  @Prop({ ref: User.name, type: Types.ObjectId, unique: true })
+  @Prop({ ref: User.name, type: Types.ObjectId })
   user: Types.ObjectId;
 
   @Prop({})
