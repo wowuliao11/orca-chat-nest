@@ -22,6 +22,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+COPY .env.production .env
+
 RUN yarn --production && yarn cache clean
 
 COPY --from=development /usr/src/app/dist ./dist
