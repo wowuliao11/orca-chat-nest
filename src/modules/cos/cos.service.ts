@@ -10,8 +10,8 @@ export class CosService {
   constructor() {
     this.minioClient = new Minio.Client({
       endPoint: process.env.MINIO_ENDPOINT,
-      port: 9000,
-      useSSL: false, // 暂未开通https哦
+      port: Number(process.env.MINIO_PORT),
+      useSSL: process.env.SSL ? true : false, // 暂未开通https哦
       accessKey: process.env.MINIO_ACCESS_KEY,
       secretKey: process.env.MINIO_SECRET_KEY,
     });
