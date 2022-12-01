@@ -44,6 +44,10 @@ export class CosService {
           console.log(err);
           throw new HttpException(err, 500);
         });
-    return `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET_1}/${fileName}`;
+    return `${process.env.SSL ? 'https' : 'http'}://${
+      process.env.MINIO_ENDPOINT
+    }${process.env.SSL ? '' : ':' + process.env.MINIO_PORT}/${
+      process.env.MINIO_BUCKET_1
+    }/${fileName}`;
   }
 }
