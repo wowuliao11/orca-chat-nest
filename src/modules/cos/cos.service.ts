@@ -1,17 +1,17 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import Jimp, * as jimp from 'jimp';
-import { AUTO } from 'jimp';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import jimp, { AUTO } from 'jimp';
 import * as Minio from 'minio';
-import * as mimeType from 'mime-types';
+import mimeType from 'mime-types';
 
 @Injectable()
 export class CosService {
   minioClient: Minio.Client;
+  logger: Logger = new Logger('MINIO');
   constructor() {
     this.minioClient = new Minio.Client({
       endPoint: process.env.MINIO_ENDPOINT,
       port: Number(process.env.MINIO_PORT),
-      useSSL: process.env.SSL ? true : false, // 暂未开通https哦
+      useSSL: false,
       accessKey: process.env.MINIO_ACCESS_KEY,
       secretKey: process.env.MINIO_SECRET_KEY,
     });
@@ -22,28 +22,37 @@ export class CosService {
     };
     const fileName =
       Number(new Date()).toString() + '.' + mimeType.extension(file.mimetype);
+
+    this.logger.log(file.mimetype);
+
     await this.minioClient
       .putObject(process.env.MINIO_BUCKET_1, fileName, file.buffer, metadata)
       .catch((err) => {
-        console.log(err);
-        throw new HttpException(err, 500);
+        this.logger.error(err.message);
+        throw new HttpException(err, 400);
       });
-    console.log(file.mimetype);
-    if (file.mimetype.includes('image'))
+    if (['image/gif'].includes(file.mimetype)) {
+      await this.minioClient.putObject(
+        process.env.MINIO_BUCKET_1,
+        process.env.MINIO_BUCKET_THUMB_FOLDER_1 + '/' + fileName,
+        file.buffer,
+        metadata,
+      );
+    } else if (file.mimetype.includes('image'))
       // 当是图片的情况下进行一个缩略图的保存
-      await this.minioClient
-        .putObject(
-          process.env.MINIO_BUCKET_1,
-          process.env.MINIO_BUCKET_THUMB_FOLDER_1 + '/' + fileName,
-          await (await jimp.read(file.buffer))
-            .resize(200, AUTO)
-            .getBufferAsync(file.mimetype),
-          metadata,
+      await this.minioClient.putObject(
+        process.env.MINIO_BUCKET_1,
+        process.env.MINIO_BUCKET_THUMB_FOLDER_1 + '/' + fileName,
+        await (
+          await jimp.read(file.buffer)
         )
-        .catch((err) => {
-          console.log(err);
-          throw new HttpException(err, 500);
-        });
+          .resize(200, AUTO)
+          .getBufferAsync(file.mimetype)
+          .catch((err) => {
+            throw new HttpException(err, 400);
+          }),
+        metadata,
+      );
     return `${process.env.SSL ? 'https' : 'http'}://${
       process.env.MINIO_ENDPOINT
     }${process.env.SSL ? '' : ':' + process.env.MINIO_PORT}/${

@@ -2,8 +2,8 @@ import { IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaginationParams {
-  @Type(() => Number)
   @IsNumber()
+  @Type(() => Number)
   @Min(0)
   pageSize: number;
 

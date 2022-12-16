@@ -31,7 +31,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const expResponse = exception.getResponse() as any;
 
-    if (expResponse.message instanceof Array && expResponse.message.length >= 0)
+    if (
+      expResponse?.message instanceof Array &&
+      expResponse.message.length >= 0
+    )
       message = expResponse.message[0];
     const errorResponse = {
       status,
