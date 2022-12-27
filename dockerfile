@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN yarn set version latest
+
 RUN yarn global add @nestjs/cli
 
 RUN yarn && yarn cache clean
@@ -23,6 +25,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 COPY .env.production .env
+
+RUN yarn set version latest
 
 RUN yarn --production && yarn cache clean
 
