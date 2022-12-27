@@ -1,20 +1,18 @@
-FROM node:16.18.1-alpine AS development
+FROM node:lts-alpine AS development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
 
-RUN yarn set version latest
+RUN yarn config set registry "https://registry.npmjs.org/"
 
 RUN yarn global add @nestjs/cli
 
 RUN yarn && yarn cache clean
 
-COPY . .
-
 RUN yarn build
 
-FROM node:16.18.1-alpine AS production
+FROM node:lts-alpine AS production
 
 RUN apk add --no-cache tini
 
@@ -26,7 +24,7 @@ COPY . .
 
 COPY .env.production .env
 
-RUN yarn set version latest
+RUN yarn config set registry "https://registry.npmjs.org/"
 
 RUN yarn --production && yarn cache clean
 
