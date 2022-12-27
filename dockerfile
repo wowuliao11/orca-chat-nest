@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:16.18.1-alpine AS development
+FROM node:16.18.1-alpine AS development
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN yarn build
 
-FROM --platform=linux/amd64 node:16.18.1-alpine AS production
+FROM node:16.18.1-alpine AS production
 
 RUN apk add --no-cache tini
 
