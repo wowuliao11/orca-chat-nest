@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN yarn config set registry "https://registry.npmjs.org/"
+RUN yarn cache clean
 
 RUN yarn global add @nestjs/cli --network-timeout 100000
 
@@ -24,7 +24,7 @@ COPY . .
 
 COPY .env.production .env
 
-RUN yarn config set registry "https://registry.npmjs.org/"
+RUN yarn cache clean
 
 RUN yarn --production && yarn cache clean --network-timeout 100000
 
