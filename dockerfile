@@ -6,9 +6,9 @@ COPY . .
 
 RUN yarn cache clean
 
-RUN yarn global add @nestjs/cli --network-timeout 100000
+RUN yarn global add @nestjs/cli --network-timeout 1000000
 
-RUN yarn && yarn cache clean --network-timeout 100000
+RUN yarn && yarn cache clean --network-timeout 1000000
 
 RUN yarn build
 
@@ -26,7 +26,7 @@ COPY .env.production .env
 
 RUN yarn cache clean
 
-RUN yarn --production && yarn cache clean --network-timeout 100000
+RUN yarn --production --network-timeout 1000000 && yarn cache clean 
 
 COPY --from=development /usr/src/app/dist ./dist
 
