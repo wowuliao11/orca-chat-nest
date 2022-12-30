@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS development
+FROM node:16.19-alpine AS development
 
 WORKDIR /usr/src/app
 
@@ -6,28 +6,30 @@ COPY . .
 
 RUN yarn cache clean
 
-RUN yarn global add @nestjs/cli --network-timeout 1000000
-
-RUN yarn && yarn cache clean --network-timeout 1000000
+RUN yarn
 
 RUN yarn build
 
-FROM node:lts-alpine AS production
+FROM node:16.19-alpine AS production
 
-RUN apk add --no-cache tini
+# RUN apk add --no-cache tini
 
 ARG NODE_ENV=production
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY package*.json ./
+
+COPY .yarn .yarn
+
+COPY .yarnrc.yml ./
+
+COPY .pnp.* ./
 
 COPY .env.production .env
 
-RUN yarn cache clean
-
-RUN yarn --production --network-timeout 1000000 && yarn cache clean 
+RUN  yarn workspaces focus --production 
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node","dist/main.js"]
+CMD ["yarn","node","dist/main.js"]

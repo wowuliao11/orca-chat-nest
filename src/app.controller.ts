@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppGateway } from './modules/ws/ws.gateway';
 import { AppService } from './app.service';
 

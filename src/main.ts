@@ -1,3 +1,4 @@
+declare const module: any;
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
@@ -11,6 +12,11 @@ async function bootstrap() {
   });
   const redisIoAdapter = new RedisIoAdapter(app);
   await redisIoAdapter.connectToRedis();
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 
   app.useWebSocketAdapter(redisIoAdapter);
 
